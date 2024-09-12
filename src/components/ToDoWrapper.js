@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ToDoForm from "./ToDoForm";
 import { v4 as uuidv4 } from "uuid";
 import ToDo from "./ToDo";
@@ -7,7 +7,15 @@ import EditToDoForm from "./EditToDoForm";
 uuidv4();
 
 const ToDoWrapper = () => {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(() => {
+    const savedToDos = localStorage.getItem("todos");
+    return savedToDos ? JSON.parse(savedToDos) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
   const addTodo = (ToDo) => {
     setTodos([
       ...todos,
@@ -35,9 +43,18 @@ const ToDoWrapper = () => {
     );
   };
 
+  const clearLocalStorage = () => {
+    localStorage.removeItem("todos");
+    setTodos([]);
+  };
+
   const editTask = (task, id) => {
-    setTodos(todos.map(todo => todo.id === id ? {...todo, task, isEditing:!todo.isEditing} : todo))
-  }
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, task, isEditing: !todo.isEditing } : todo
+      )
+    );
+  };
 
   return (
     <div className="TodoWrapper">
@@ -45,10 +62,10 @@ const ToDoWrapper = () => {
       <ToDoForm addTodo={addTodo} />
       {todos.map((todo, index) =>
         todo.isEditing ? (
-          <EditToDoForm task={todo} editToDo={editTask}/>
+          <EditToDoForm task={todo} editToDo={editTask} />
         ) : (
           <ToDo
-            task={todo} 
+            task={todo}
             key={todo.id}
             toggleComplete={toggleComplete}
             deleteToDo={deleteToDo}
@@ -56,6 +73,7 @@ const ToDoWrapper = () => {
           />
         )
       )}
+      <button onClick={clearLocalStorage} className="todo-btn">Clear All Tasks</button>
     </div>
   );
 };
