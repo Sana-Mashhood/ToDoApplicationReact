@@ -2,11 +2,19 @@ import React, { useState } from "react";
 
 const ToDoForm = ({ addTodo }) => {
   const [value, setValue] = useState("");
+  const [points, setPoints] = useState(0);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    addTodo(value);
+    if (!value.trim() || points <= 0) {
+      alert('Please provide a task and assign positive points');
+      return;
+    }
+    addTodo(value, points);
     setValue("");
+    setPoints(0)
   };
+
   return (
     <form className="TodoForm" onSubmit={handleSubmit}>
       <input
@@ -17,6 +25,13 @@ const ToDoForm = ({ addTodo }) => {
         onChange={(e) => {
           setValue(e.target.value);
         }}
+      />
+      <input
+        className="todo-points"
+        type="number"
+        value={points}
+        placeholder="Points"
+        onChange={(e) => setPoints(Number(e.target.value))}
       />
       <button className="todo-btn" type="submit">
         Add Task

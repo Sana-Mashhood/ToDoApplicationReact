@@ -3,6 +3,7 @@ import ToDoForm from "./ToDoForm";
 import { v4 as uuidv4 } from "uuid";
 import ToDo from "./ToDo";
 import EditToDoForm from "./EditToDoForm";
+import ProgressBar from "./ProgressBar";
 
 uuidv4();
 
@@ -16,12 +17,13 @@ const ToDoWrapper = () => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
-  const addTodo = (ToDo) => {
+  const addTodo = (task, points) => {
     setTodos([
       ...todos,
-      { id: uuidv4(), task: ToDo, completed: false, isEditing: false },
+      { id: uuidv4(), task, points, completed: false, isEditing: false },
     ]);
     console.log(todos);
+    console.log(totalPoints, completedPoints);
   };
   const toggleComplete = (id) => {
     setTodos(
@@ -56,9 +58,18 @@ const ToDoWrapper = () => {
     );
   };
 
+  const totalPoints =
+    todos.length > 0 ? todos.reduce((acc, todo) => acc + todo.points, 0) : 0;
+
+  const completedPoints =
+    todos.length > 0
+      ? todos.reduce((acc, todo) => acc + (todo.completed ? todo.points : 0), 0)
+      : 0;
+
   return (
     <div className="TodoWrapper">
       <h1>Get Things Done!!</h1>
+      <ProgressBar totalPoints={totalPoints} completedPoints={completedPoints} />
       <ToDoForm addTodo={addTodo} />
       {todos.map((todo, index) =>
         todo.isEditing ? (
@@ -73,7 +84,9 @@ const ToDoWrapper = () => {
           />
         )
       )}
-      <button onClick={clearLocalStorage} className="todo-btn">Clear All Tasks</button>
+      <button onClick={clearLocalStorage} className="todo-btn">
+        Clear All Tasks
+      </button>
     </div>
   );
 };

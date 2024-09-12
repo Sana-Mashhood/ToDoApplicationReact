@@ -51,6 +51,22 @@ h1 {
   color: #000000;
 }
 
+
+.todo-points {
+  outline: none;
+  background: none;
+  border: 1px solid #a5e2e7;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  width: 75px;
+  color: #000000;
+}
+
+.todo-points::placeholder {
+  color: #000000;
+}
+
 .todo-btn {
   background: #a5e2e7 ;
   color: #000000;
@@ -88,4 +104,30 @@ h1 {
 .edit-icon,
 .delete-icon {
   cursor: pointer;
+}
+
+.progress-bar-wrapper {
+  margin-top: 20px;
+  text-align: center;
+}
+
+svg {
+}
+
+circle {
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+.progress-bar {
+  width: 100%;
+  background-color: #f3f3f3;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress {
+  background-color: #4caf50;
+  height: 20px;
+  transition: width 0.3s ease;
 }
